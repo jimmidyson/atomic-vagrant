@@ -1,0 +1,35 @@
+#cloud-config
+
+password: vagrant
+chpasswd: { expire: False }
+ssh_pwauth: True
+users:
+  - default
+  - name: vagrant
+    groups: docker
+    passwd: $6$F1t96xwf9lr1Y51m$sTavEKthUSmKQszSoPqNKKwYFHDhpYxv8wNnbbb7y1OYPou/XkHauYWdLK24zboZytSredMyBU92zeywnocZK0
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key
+    sudo:
+      - ALL=(ALL) NOPASSWD:ALL
+write_files:
+  - content: |
+      password: vagrant
+      chpasswd: { expire: False }
+      ssh_pwauth: True
+      users:
+        - default
+        - name: vagrant
+          groups: docker
+          passwd: $6$F1t96xwf9lr1Y51m$sTavEKthUSmKQszSoPqNKKwYFHDhpYxv8wNnbbb7y1OYPou/XkHauYWdLK24zboZytSredMyBU92zeywnocZK0
+          ssh-authorized-keys:
+            - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8d#
+          sudo:
+            - ALL=(ALL) NOPASSWD:ALL
+    path: /var/lib/cloud/instances/nocloud/user-data
+  - content: |
+    path: /var/lib/cloud/instances/nocloud/meta-data
+  - content: |
+      datasource_list: [ NoCloud, None ]
+    path: /etc/cloud/cloud.cfg.d/90_datasources.cfg
+final_message: "This atomic host is now vagrantized!"

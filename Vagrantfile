@@ -1,16 +1,19 @@
-Vagrant.configure(2) do |config|
-  config.vm.box = "atomic"
+Vagrant.configure("2") do |config|
+  config.vm.synced_folder ".", "/vagrant", disabled: true
 
-  config.vm.network "private_network", ip: "172.28.128.4"
+  config.vm.synced_folder ".", "/home/vagrant/vagrant", type: "rsync"
 
-  config.vm.provision "docker" do |d|
-    d.run "openshift",
-      image: "openshift/origin:latest",
-      cmd: "start",
-      args: "-v /var/run/docker.sock:/var/run/docker.sock --privileged --net=host"
+  config.vm.provider :libvirt do |libvirt, override|
+    libvirt.disk_bus = 'sata'
+  end
 
-    d.run "cadvisor",
-      image: "google/cadvisor:0.6.2",
-      args: "--privileged -p 4194:8080 --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro"
+  config.vm.provider :virtualbox do |vb|
+    # Guest Additions are unavailable.
+    vb.check_guest_additions = false
+    vb.functional_vboxsf     = false
+
+    # Fix docker not being able to resolve private registry in VirtualBox
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
   end
 end

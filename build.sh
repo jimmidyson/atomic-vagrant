@@ -19,17 +19,18 @@ qemu-kvm -name atomic-cloud-host -m 768 -hda box.img --drive media=cdrom,file=cl
 
 sleep 30s
 
-ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.1/keys/vagrant vagrant@localhost sudo docker info
-ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.1/keys/vagrant vagrant@localhost sudo atomic upgrade
+ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.2/keys/vagrant vagrant@localhost sudo docker info
+ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.2/keys/vagrant vagrant@localhost sudo atomic upgrade
 
-ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.1/keys/vagrant vagrant@localhost sudo systemctl reboot || true
+ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.2/keys/vagrant vagrant@localhost sudo systemctl reboot || true
 
 sleep 30s
 
-ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.1/keys/vagrant vagrant@localhost sudo ostree admin undeploy 1
-ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.1/keys/vagrant vagrant@localhost sudo ostree admin cleanup
-ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.1/keys/vagrant vagrant@localhost sudo sed -i 's/.*UseDNS.*/UseDNS no/' /etc/ssh/sshd_config
-ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.1/keys/vagrant vagrant@localhost sudo rm -f /etc/ssh/ssh_host_*
+ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.2/keys/vagrant vagrant@localhost sudo ostree admin undeploy 1
+ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.2/keys/vagrant vagrant@localhost sudo ostree admin cleanup
+ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.2/keys/vagrant vagrant@localhost sudo sed -i 's/.*UseDNS.*/UseDNS\ no/' /etc/ssh/sshd_config
+ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.2/keys/vagrant vagrant@localhost sudo rm -f /etc/ssh/ssh_host_*
+ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.2/keys/vagrant vagrant@localhost sudo systemctl enable docker
 
 echo system_powerdown | socat - UNIX-CONNECT:monitor
 
@@ -39,5 +40,5 @@ sleep 30s
 
 tar -czvf atomic-libvirt.box Vagrantfile metadata.json box.img
 
-qemu-img convert -O vdi box.img box-virtualbox.img
-tar --transform 'flags=r;s|-virtualbox||' -czvf atomic-virtualbox.box Vagrantfile metadata-virtualbox.json box-virtualbox.img
+qemu-img convert -O vmdk box.img box-virtualbox-disk1.vmdk
+tar --transform 'flags=r;s|-virtualbox||' -czvf atomic-virtualbox.box Vagrantfile metadata-virtualbox.json box-virtualbox-disk1.vmdk box-virtualbox.ovf

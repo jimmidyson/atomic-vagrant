@@ -32,6 +32,8 @@ ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.2/key
 ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.2/keys/vagrant vagrant@localhost sudo rm -f /etc/ssh/ssh_host_*
 ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.2/keys/vagrant vagrant@localhost sudo systemctl enable docker
 ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.2/keys/vagrant vagrant@localhost sudo groupadd docker
+ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.2/keys/vagrant vagrant@localhost sudo sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
+ssh $SSH_OPTIONS -p$SSH_PORT -i/opt/vagrant/embedded/gems/gems/vagrant-1.7.2/keys/vagrant vagrant@localhost sudo sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/sysconfig/selinux
 
 echo system_powerdown | socat - UNIX-CONNECT:monitor
 

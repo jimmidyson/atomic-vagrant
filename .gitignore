@@ -3,3 +3,4 @@
 *.box
 *.img
 *.vmdk
+.vagrant/
